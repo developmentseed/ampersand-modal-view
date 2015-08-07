@@ -106,9 +106,13 @@ module.exports = AmpView.extend({
     'keydown': 'escape',
   },
 
-  initialize: function () {
+  initialize: function (options) {
     // Need to listen to entire doc, not just in modal.
     document.addEventListener('keydown', this.escape.bind(this));
+    // let the user pass a "mandatory" option (boolean) which short-cicruits
+    // the cancelModal function
+    this.mandatory = options.mandatory;
+
   },
 
   //
@@ -193,6 +197,8 @@ module.exports = AmpView.extend({
   // Dismisses the modal just like `close()` but signifies a canceled action.
   //
   cancel: function cancelModal(event) {
+    // short-cicruit if the modal is mandatory
+    if (this.mandatory) { return; }
     var container = this.el.parentNode;
     // We can't close if we're not appended to a parent.
     if (!container) { return false; }
